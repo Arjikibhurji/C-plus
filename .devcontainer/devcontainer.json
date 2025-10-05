@@ -1,9 +1,17 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {},
-  "hostRequirements" : {
-    "cpus" : 16,
-    "memory": "64gb",
-    "storage" : "128gb"
-  }
+    "name": "C++",
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {},
+    "hostRequirements": {
+        "cpus": 16,
+        "memory": "64gb",
+        "storage": "128gb"
+    },
+    // "forwardPorts": [],
+    // "postCreateCommand": "gcc -v",
+    // "customizations": {},
+    // "remoteUser": "root"
 }
