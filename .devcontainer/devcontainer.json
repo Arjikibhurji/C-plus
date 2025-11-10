@@ -6,9 +6,9 @@
     },
     "features": {},
     "hostRequirements": {
-        "cpus": 16,
-        "memory": "64gb",
-        "storage": "128gb"
+        "cpus": 4,
+        "memory": "8gb",
+        "storage": "32gb"
     },
     // "forwardPorts": [],
     // "postCreateCommand": "gcc -v",
