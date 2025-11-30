@@ -2337,8 +2337,225 @@ template <typename T> void foo(double, T) { cout << "call 2\n"; }
 
 foo(5.0, 5.0); [here both 1 & 2 are equally good]
 
-15.
+15. Templayte classes: You can have these; basically classes defined where you have unknown
+    data type of your select variable i.e.
 
+    template <typename T>
+    class Box {
+        T value;     // value is of type T
+    };
+
+    Box<int> b1;         // Box containing an int
+    Box<double> b2;      // Box containing a double
+    Box<string> b3;      // Box containing a string
+
+    So unknown T is replaced by int, double, string respectively. Therefore templates help write one class
+    for multiple data types
+
+16.
+
+// -------------------------------------------
+// TEMPLATE CLASS: MyArray
+// -------------------------------------------
+
+// This tells the compiler that the class uses a *template type* T.
+// T is a placeholder for any datatype (int, double, string, etc.).
+template <class T>
+struct MyArray
+{
+    // -------------------------------------------
+    // DATA MEMBER
+    // -------------------------------------------
+
+    T *m_p;
+    // m_p is a POINTER to type T.
+    // In this class, it will point to a *dynamic array*
+    // allocated using new T[size].
+
+
+    // -------------------------------------------
+    // DEFAULT CONSTRUCTOR
+    // -------------------------------------------
+
+    MyArray() : m_p(NULL)
+    {
+        // This constructor is used when MyArray is created with no size.
+        // Example:
+        //      MyArray<int> a;
+        //
+        // m_p = NULL means:
+        //      There is no array allocated yet.
+    }
+
+
+    // -------------------------------------------
+    // CONSTRUCTOR WITH SIZE
+    // -------------------------------------------
+
+    MyArray(int size) : m_p(new T[size])
+    {
+        // This constructor is used when MyArray is created with a size.
+        // Example:
+        //      MyArray<int> x(100);
+        //
+        // new T[size]:
+        //      creates a *dynamic array* of T with 'size' elements.
+        //
+        // m_p(new T[size]):
+        //      initializes m_p to point to the first element of this array.
+    }
+
+
+    // -------------------------------------------
+    // READ-ONLY INDEXING OPERATOR
+    // const at the end = works when the object is const
+    // -------------------------------------------
+
+    const T& operator[](unsigned i) const
+    {
+        // Called when accessing elements on a const object.
+        // Returns a *const reference* so the user cannot modify the data.
+        return m_p[i];
+    }
+
+
+    // -------------------------------------------
+    // NORMAL INDEXING OPERATOR (modifiable)
+    // -------------------------------------------
+
+    T& operator[](unsigned i)
+    {
+        // This version is used when the object is NOT const.
+        // It returns a reference so you can read or write:
+        //      x[0] = 4;
+        return m_p[i];
+    }
+
+
+    // -------------------------------------------
+    // DESTRUCTOR
+    // -------------------------------------------
+
+    ~MyArray()
+    {
+        // The destructor runs AUTOMATICALLY when the object goes out of scope.
+        // It frees the memory allocated by new T[size] in the constructor.
+        //
+        // This prevents memory leaks.
+        delete[] m_p;
+    }
+};
+
+
+// -------------------------------------------
+// MAIN FUNCTION
+// -------------------------------------------
+
+int main()
+{
+    // Create a MyArray of 100 integers.
+    // This calls: MyArray(int size)
+    MyArray<int> x(100);
+
+    // Access element 0 using the overloaded operator[].
+    // Equivalent to: x.m_p[0] = 4;
+    x[0] = 4;
+
+    // When main() ends, 'x' goes out of scope.
+    // Destructor ~MyArray() is called and delete[] m_p is executed.
+    return 0;
+}
+
+// However this all is very rudimentary and copy semantic is not defined here and so if you do copy
+//  then double deletion would occur since it is shallow copy
+
+17. std::pair: within utility header and helps to store two values together, you can access them through .first and .second
+
+    #include <utility> // for std::pair
+    #include <string>
+    #include <iostream>
+
+    int main() {
+        // Create a pair holding an int and a string
+        std::pair<int, std::string> myPair;
+
+        // Assign values to the pair
+        myPair.first = 42;               // first element is an int
+        myPair.second = "Hello, World!"; // second element is a string
+
+        // Access and print the values
+        std::cout << "First: " << myPair.first << std::endl;
+        std::cout << "Second: " << myPair.second << std::endl;
+
+        return 0;
+    }
+
+18.
+Bracket         	    Example	                    Meaning
+Angle brackets < >	    pair<int,string>	        Template type parameters
+Round brackets ( )	    pair<int,string>            p(10,"hi")	Function or constructor call
+Square brackets [ ]	    arr[3]	                    Array indexing
+
+19. any class that uses a template is called a template class and values to be given in angle brackets <>
+
+20. Building simple version of std::pair
+
+template<class T1, class T2> // T1 is type of first element, T2 is type of second element
+
+struct pair
+{
+    pair() {} // default constructor
+
+    T1 first; // declare the variable first; we could have done T1 and T2 b however std::pair uses first and second and so better readability
+    T2 second; // declare the variable second; you need to declare these after the constructor otherwise out of scope error
+
+    pair(const T1& a, const T2& b) : first(a), second(b) // parametrized constructor; initialize 'first' with a and 'second' with b
+    {
+    }
+
+};
+
+template<class T1, class T2>
+
+pair<T1,T2> make_pair(const T1& a, const T2& b) // function to create a pair, defining make_pair
+{
+    return pair<T1,T2>(a,b);
+}
+
+
+20. Very important: template <class T>
+here class does not mean class as in struct or class however it simply means a placeholder for any data type
+    i.e. int, double, string etc
+
+    So the actual type is T and “T is a placeholder for ANY datatype.”
+
+You can also replace class with typename
+
+21. std::complex : within complex header and helps to store complex numbers and do operations on them; it is limited to
+    double float and long double only; can do complex arithematic(+,- ) and has literals for complex numbers also (imaginary unit)
+
+    add those with #include <complex> and using namespace std::complex_literals;
+
+    // 1i is the imaginary unit i; 2i is 2 times i
+    std::complex<double> z1 = 3.0 + 4.0i
+
+    then can do:
+    std::cout << z1.real() << ", " << z1.imag() << std::endl;
+
+=====================================================================================
+
+Lecture 7: IO
+
+1. Stream: Simply a pipe that carries ordered sequence of characters from one place to another
+
+2. Eg: cin (source is keyboard, destination is program) cout (source is program, destination is screen)
+
+3. <<: Typically is binary shift operator however overloaded here to mean output to stream
+
+    Binary shift: int x = 3 // 0b00000011
+    int y = x << 2; // y = 0b00001100 = 1 ; so simply shifts bits to left by 2
+
+4.
 */
 
 
